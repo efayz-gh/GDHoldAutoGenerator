@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDReplayToHold", "GDReplayToHold\GDReplayToHold.csproj", "{2A9CFC6C-269D-4813-8E1E-1BF66D6DD5BE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2A9CFC6C-269D-4813-8E1E-1BF66D6DD5BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A9CFC6C-269D-4813-8E1E-1BF66D6DD5BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A9CFC6C-269D-4813-8E1E-1BF66D6DD5BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A9CFC6C-269D-4813-8E1E-1BF66D6DD5BE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
