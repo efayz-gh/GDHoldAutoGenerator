@@ -78,5 +78,7 @@ public static class LevelString
         }
         
         gmd.SelectSingleNode("/plist/dict/k[text()='k4']/following-sibling::*[1]")!.InnerText = encodedLevelString;
+        
+        gmd.Save(gmdFile);
     }
 }
