@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDReplayToHold", "GDReplayToHold\GDReplayToHold.csproj", "{2A9CFC6C-269D-4813-8E1E-1BF66D6DD5BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDHoldAutoGenerator", "GDHoldAutoGenerator\GDHoldAutoGenerator.csproj", "{2A9CFC6C-269D-4813-8E1E-1BF66D6DD5BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "UI\UI.csproj", "{C4DAA3D8-A51A-430D-B61D-3399B7E6D506}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +14,9 @@ Global
 		{2A9CFC6C-269D-4813-8E1E-1BF66D6DD5BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A9CFC6C-269D-4813-8E1E-1BF66D6DD5BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A9CFC6C-269D-4813-8E1E-1BF66D6DD5BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4DAA3D8-A51A-430D-B61D-3399B7E6D506}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4DAA3D8-A51A-430D-B61D-3399B7E6D506}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4DAA3D8-A51A-430D-B61D-3399B7E6D506}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4DAA3D8-A51A-430D-B61D-3399B7E6D506}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,4 +1,4 @@
-namespace GDReplayToHold;
+namespace GDHoldAutoGenerator;
 
 public static class Param
 {

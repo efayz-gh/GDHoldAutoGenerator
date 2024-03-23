@@ -1,8 +1,8 @@
 ﻿using System.Text;
 using System.Text.Json;
-using static GDReplayToHold.GDObject;
+using static GDHoldAutoGenerator.GDObject;
 
-namespace GDReplayToHold;
+namespace GDHoldAutoGenerator;
 
 public static class Program
 {

@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Text.Json.Serialization;
 
-namespace GDReplayToHold;
+namespace GDHoldAutoGenerator;
 
 // represents a .gdr.json replay file
 public class GDReplay

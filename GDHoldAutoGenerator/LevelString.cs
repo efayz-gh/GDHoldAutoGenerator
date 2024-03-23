@@ -1,13 +1,12 @@
 using System.IO.Compression;
 using System.Text;
-using System.Text.Unicode;
 using System.Xml;
 
-namespace GDReplayToHold;
+namespace GDHoldAutoGenerator;
 
 public class LevelString
 {
-    public string LvlString { get; set; }
+    public string? LvlString { get; set; }
 
     public string EncodedLvlString
     {
@@ -16,7 +15,7 @@ public class LevelString
             using MemoryStream ms = new();
             using GZipStream gzip = new(ms, CompressionMode.Compress, true);
 
-            var bytes = Encoding.UTF8.GetBytes(LvlString);
+            var bytes = Encoding.UTF8.GetBytes(LvlString ?? throw new InvalidOperationException());
 
             gzip.Write(bytes, 0, bytes.Length);
             gzip.Close();
@@ -84,7 +83,7 @@ public class LevelString
         gmd.Save(gmdFile);
     }
     
-    public IEnumerable<GDObject> GetObjects() => LvlString
+    public IEnumerable<GDObject> GetObjects() => LvlString!
         .Split(';')
         .Skip(1).SkipLast(1) // skip first element (level info) and last element (empty)
         .Select(objString => new GDObject(objString));
