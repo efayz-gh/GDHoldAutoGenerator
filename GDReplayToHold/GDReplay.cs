@@ -1,9 +1,9 @@
 using System.Globalization;
 using System.Text.Json.Serialization;
-using static GDReplayToHold.GDObject;
 
 namespace GDReplayToHold;
 
+// represents a .gdr.json replay file
 public class GDReplay
 {
     [JsonPropertyName("author")] public string Author { get; set; }
@@ -64,8 +64,8 @@ public class GDReplay
                 obj[Param.OptionsTriggerDisableP2Controls] = input.Down ? "-1" : "1";
             }
             
-            // mirror trigger on release for visual clarity
-            if (input.Down)
+            // mirror trigger on release
+            if (!input.Down)
                 obj[Param.MirrorVertical] = "1";
             
             return obj;

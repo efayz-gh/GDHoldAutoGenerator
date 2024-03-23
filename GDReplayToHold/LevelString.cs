@@ -5,47 +5,49 @@ using System.Xml;
 
 namespace GDReplayToHold;
 
-public static class LevelString
+public class LevelString
 {
-    public static string DecodeLvlStr(this string encodedLevelString)
+    public string LvlString { get; set; }
+
+    public string EncodedLvlString
     {
-        var lvlStringB64 = Convert.FromBase64String(
-            encodedLevelString
-                .Replace('-', '+')
-                .Replace('_', '/')
-        );
+        get
+        {
+            using MemoryStream ms = new();
+            using GZipStream gzip = new(ms, CompressionMode.Compress, true);
 
-        using var gzip = new GZipStream(new MemoryStream(lvlStringB64), CompressionMode.Decompress);
+            var bytes = Encoding.UTF8.GetBytes(LvlString);
 
-        var buf = new byte[4096];
-        int len;
+            gzip.Write(bytes, 0, bytes.Length);
+            gzip.Close();
 
-        var sb = new StringBuilder();
+            var lvlStringB64 = Convert.ToBase64String(ms.ToArray());
 
-        while ((len = gzip.Read(buf, 0, buf.Length)) > 0)
-            sb.Append(Encoding.UTF8.GetString(buf, 0, len));
+            return lvlStringB64
+                .Replace('+', '-')
+                .Replace('/', '_');
+        }
+        set
+        {
+            var lvlStringB64 = Convert.FromBase64String(
+                value.Replace('-', '+').Replace('_', '/')
+            );
 
-        return sb.ToString();
+            using var gzip = new GZipStream(new MemoryStream(lvlStringB64), CompressionMode.Decompress);
+
+            var buf = new byte[4096];
+            int len;
+
+            var sb = new StringBuilder();
+
+            while ((len = gzip.Read(buf, 0, buf.Length)) > 0)
+                sb.Append(Encoding.UTF8.GetString(buf, 0, len));
+
+            LvlString = sb.ToString();
+        }
     }
-    
-    public static string EncodeLvlStr(this string levelString)
-    {
-        using MemoryStream ms = new();
-        using GZipStream gzip = new(ms, CompressionMode.Compress, true);
-        
-        var bytes = Encoding.UTF8.GetBytes(levelString);
-        
-        gzip.Write(bytes, 0, bytes.Length);
-        gzip.Close();
-        
-        var lvlStringB64 = Convert.ToBase64String(ms.ToArray());
 
-        return lvlStringB64
-            .Replace('+', '-')
-            .Replace('/', '_');
-    }
-
-    public static string GetEncodedLevelString(this string gmdFile)
+    public void LoadFromGmdFile(string gmdFile)
     {
         if (!File.Exists(gmdFile))
             throw new FileNotFoundException("File not found.", gmdFile);
@@ -55,30 +57,45 @@ public static class LevelString
         gmd.LoadXml(File.ReadAllText(gmdFile));
 
         // get level string from plist (key: k4)
-        return gmd.SelectSingleNode("/plist/dict/k[text()='k4']/following-sibling::*[1]")?.InnerText.Trim()
-                          ?? throw new Exception("Level string not found.");
+        EncodedLvlString = gmd.SelectSingleNode("/plist/dict/k[text()='k4']/following-sibling::*[1]")?.InnerText.Trim()
+            ?? throw new Exception("Level string not found.");
     }
-    
-    public static void WriteEncodedString(this string encodedLevelString, string gmdFile)
+
+    public void WriteToGmdFile(string gmdFile)
     {
         XmlDocument gmd = new();
         gmd.LoadXml(File.ReadAllText(gmdFile));
-        
+
         // create k4 key if it doesn't exist
         if (gmd.SelectSingleNode("/plist/dict/k[text()='k4']") == null)
         {
             var k4 = gmd.CreateElement("k");
             k4.InnerText = "k4";
-            
+
             var v4 = gmd.CreateElement("s");
             v4.InnerText = "";
-            
+
             gmd.SelectSingleNode("/plist/dict")!.AppendChild(k4);
             gmd.SelectSingleNode("/plist/dict")!.AppendChild(v4);
         }
-        
-        gmd.SelectSingleNode("/plist/dict/k[text()='k4']/following-sibling::*[1]")!.InnerText = encodedLevelString;
-        
+
+        gmd.SelectSingleNode("/plist/dict/k[text()='k4']/following-sibling::*[1]")!.InnerText = EncodedLvlString;
+
         gmd.Save(gmdFile);
+    }
+    
+    public IEnumerable<GDObject> GetObjects() => LvlString
+        .Split(';')
+        .Skip(1).SkipLast(1) // skip first element (level info) and last element (empty)
+        .Select(objString => new GDObject(objString));
+    
+    public void AppendObjects(IEnumerable<GDObject> objects)
+    {
+        var sb = new StringBuilder();
+
+        foreach (var obj in objects)
+            sb.Append(obj + ";");
+
+        LvlString += sb.ToString();
     }
 }
