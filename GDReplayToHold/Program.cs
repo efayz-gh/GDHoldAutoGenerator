@@ -54,9 +54,9 @@ public static class Program
                     File.ReadAllText(replayFile)
                 )!;
 
-                levelString.AppendObjects(replay.ToObjects());
+                levelString.AppendObjects(replay.ToObjects(true));
 
-                levelString.WriteToGmdFile(gmdFile[..^3] + "_hold.gmd");
+                levelString.WriteToGmdFile(gmdFile);
 
                 break;
             }

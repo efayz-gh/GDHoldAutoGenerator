@@ -17,33 +17,32 @@ public class GDReplay
     [JsonPropertyName("level")] public Level Level { get; set; }
     [JsonPropertyName("seed")] public long Seed { get; set; }
     [JsonPropertyName("version")] public double Version { get; set; }
-    
-    public bool TwoPlayer => Inputs.Any(input => input.TwoPlayer);
 
-    public IEnumerable<GDObject> ToObjects()
+    private bool? _twoPlayer;
+    public bool TwoPlayer => _twoPlayer ??= Inputs.Any(input => input.TwoPlayer);
+
+    public IEnumerable<GDObject> ToObjects(bool clickSounds = false)
     {
-        var objects = new List<GDObject>
+        var objects = new List<GDObject>();
+        objects.Add(new GDObject() // set initial options trigger to disable all controls
         {
-            new() // set initial options trigger to disable all controls
-            {
-                [Param.ObjectId] = ObjectIds.OptionsTrigger,
-                [Param.X] = "-15",
-                [Param.Y] = "-15",
-                [Param.IdkButImportant] = "1",
-                [Param.IsTrigger] = "1",
-                [Param.OptionsTriggerDisableP1Controls] = "1",
-                [Param.OptionsTriggerDisableP2Controls] = "1"
-            }
-        };
+            [Param.ObjectId] = ObjectIds.OptionsTrigger,
+            [Param.X] = "-15",
+            [Param.Y] = "-15",
+            [Param.IdkButImportant] = "1",
+            [Param.IsTrigger] = "1",
+            [Param.OptionsTriggerDisableP1Controls] = "1",
+            [Param.OptionsTriggerDisableP2Controls] = "1"
+        });
 
         // enable/disable controls according to replay inputs
-        objects.AddRange(Inputs.Select(input =>
+        foreach (var input in Inputs)
         {
             var obj = new GDObject
             {
                 [Param.ObjectId] = ObjectIds.OptionsTrigger,
                 [Param.X] = input.MhrX.ToString(CultureInfo.InvariantCulture),
-                [Param.Y] = (input.MhrY - 90.0).ToString("F3", CultureInfo.InvariantCulture), // y position seems to be 4 blocks off
+                [Param.Y] = (input.MhrY - 90.0).ToString("F3", CultureInfo.InvariantCulture), // y position seems to be 6 blocks off
                 [Param.IdkButImportant] = "1",
                 [Param.IsTrigger] = "1"
             };
@@ -68,8 +67,23 @@ public class GDReplay
             if (!input.Down)
                 obj[Param.MirrorVertical] = "1";
             
-            return obj;
-        }));
+            objects.Add(obj);
+            
+            // add click sound
+            if (clickSounds)
+            {
+                objects.Add(new GDObject
+                {
+                    [Param.ObjectId] = ObjectIds.SfxTrigger,
+                    [Param.X] = input.MhrX.ToString(CultureInfo.InvariantCulture),
+                    [Param.Y] = "-30",
+                    [Param.SfxTriggerSoundId] = "477",
+                    [Param.SfxTriggerVolume] = input.Down ? "2" : "1.5",
+                    [Param.SfxTriggerStart] = input.Down ? "0" : "23",
+                    [Param.SfxTriggerEnd] = input.Down ? "16" : "0"
+                });
+            }
+        }
         
         return objects;
     }
