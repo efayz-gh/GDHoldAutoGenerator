@@ -1,6 +1,4 @@
-﻿using System.Text;
-using System.Text.Json;
-using static GDHoldAutoGenerator.GDObject;
+﻿using System.Text.Json;
 
 namespace GDHoldAutoGenerator;
 
@@ -20,8 +18,10 @@ public static class Program
                 Console.Write("Enter .dec file name: ");
                 var file = Path.Combine(path, Console.ReadLine()!);
 
-                LevelString levelString = new();
-                levelString.LvlString = File.ReadAllText(file);
+                LevelString levelString = new()
+                {
+                    LvlString = File.ReadAllText(file)
+                };
 
                 levelString.WriteToGmdFile(file[..^3]);
 
@@ -35,7 +35,10 @@ public static class Program
                 LevelString levelString = new();
                 levelString.LoadFromGmdFile(file);
                 
-                WriteDecryptedFile(file, levelString.LvlString);
+                // add line breaks between objects
+                levelString.LvlString = levelString.LvlString!.Replace(";1", ";\n1");
+                
+                WriteDecryptedFile(file, levelString.LvlString!);
 
                 break;
             }
@@ -50,7 +53,7 @@ public static class Program
                 LevelString levelString = new();
                 levelString.LoadFromGmdFile(gmdFile);
 
-                var replay = JsonSerializer.Deserialize<GDReplay>(
+                var replay = JsonSerializer.Deserialize<MHReplay>(
                     File.ReadAllText(replayFile)
                 )!;
 

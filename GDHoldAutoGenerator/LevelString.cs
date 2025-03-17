@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace GDHoldAutoGenerator;
 
@@ -52,42 +53,36 @@ public class LevelString
             throw new FileNotFoundException("File not found.", gmdFile);
 
         // load .gmd file
-        XmlDocument gmd = new();
-        gmd.LoadXml(File.ReadAllText(gmdFile));
+        XDocument gmd = XDocument.Load(gmdFile);
 
         // get level string from plist (key: k4)
-        EncodedLvlString = gmd.SelectSingleNode("/plist/dict/k[text()='k4']/following-sibling::*[1]")?.InnerText.Trim()
-            ?? throw new Exception("Level string not found.");
+        EncodedLvlString = gmd.Root?.Element("dict")?
+                               .Elements("k")
+                               .FirstOrDefault(k => k.Value == "k4")?
+                               .ElementsAfterSelf()
+                               .FirstOrDefault()?
+                               .Value.Trim() ??
+                           throw new XmlException("Invalid .gmd file.");
     }
 
     public void WriteToGmdFile(string gmdFile)
     {
-        XmlDocument gmd = new();
-        gmd.LoadXml(File.ReadAllText(gmdFile));
+        XDocument gmd = XDocument.Load(gmdFile);
 
-        // create k4 key if it doesn't exist
-        if (gmd.SelectSingleNode("/plist/dict/k[text()='k4']") == null)
-        {
-            var k4 = gmd.CreateElement("k");
-            k4.InnerText = "k4";
-
-            var v4 = gmd.CreateElement("s");
-            v4.InnerText = "";
-
-            gmd.SelectSingleNode("/plist/dict")!.AppendChild(k4);
-            gmd.SelectSingleNode("/plist/dict")!.AppendChild(v4);
-        }
-
-        gmd.SelectSingleNode("/plist/dict/k[text()='k4']/following-sibling::*[1]")!.InnerText = EncodedLvlString;
+        gmd.Descendants("k")
+            .First(k => k.Value == "k4")
+            .ElementsAfterSelf()
+            .First()
+            .Value = EncodedLvlString;
 
         gmd.Save(gmdFile);
     }
-    
-    public IEnumerable<GDObject> GetObjects() => LvlString!
+
+    public GDObjectList GetObjects() => new(LvlString!
         .Split(';')
         .Skip(1).SkipLast(1) // skip first element (level info) and last element (empty)
-        .Select(objString => new GDObject(objString));
-    
+        .Select(objString => new GDObject(objString)));
+
     public void AppendObjects(IEnumerable<GDObject> objects)
     {
         var sb = new StringBuilder();
