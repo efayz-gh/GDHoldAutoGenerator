@@ -3,6 +3,8 @@
 ## Description
 This is a tool for the game "Geometry Dash" to convert a replay file and a level file to a "hold-auto-level".
 
+![GDHoldAutoGenerator](ui_screenshot.png)
+
 ### hold-auto-level
 Hold-auto-levels are a type of auto-level where the player holds down the button for the entire level.
 This is possible through the new "options" trigger which was added in update 2.2 
