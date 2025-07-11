@@ -1,61 +1,84 @@
-﻿<Window x:Class="UI.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-        Title="GD Hold-Auto Generator" Height="240" Width="420"
-        WindowStartupLocation="CenterScreen">
-    <Grid Margin="8">
+﻿<mde:MaterialWindow x:Class="UI.MainWindow"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:mde="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
+                    mc:Ignorable="d"
+                    BorderBackgroundBrush="#0093a6"
+                    BorderForegroundBrush="White"
+                    Style="{StaticResource MaterialDesignWindow}"
+                    Title="GD Hold-Auto Generator" Height="240" Width="420"
+                    MinHeight="240" MinWidth="420"
+                    WindowStartupLocation="CenterScreen">
+        <DockPanel>
+            <!-- Title -->
+            
+            <TextBlock DockPanel.Dock="Top" 
+                       FontSize="17" 
+                       Background="{DynamicResource PrimaryHueMidBrush}"
+                       TextWrapping="Wrap"
+                       Margin="5, 5"
+                       Text="Geometry Dash Replay to Hold-Auto-Level Converter"
+                       Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+            
+            <!-- Bottom -->
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
+                <Button Content="Generate" Margin="5" Padding="45 0" Click="ButtonGenerate_OnClick" />
+                <Label Content="Generate Clicks" Margin="5" VerticalAlignment="Center"/>
+                <ToggleButton
+                    Name="CheckGenerateClicks"
+                    Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                    ToolTip="Default ToggleButton Style"
+                />
+            </StackPanel>
+            
+            <!-- Main Content -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBox 
+                    Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                    Name="BoxBrowseLvl" 
+                    Margin="5" >
+                    <materialDesign:HintAssist.Hint>
+                        <StackPanel
+                            Margin="2, 0"
+                            Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                                Kind="FileCode" />
+                            <TextBlock
+                                Text="Select .gmd level file" />
+                        </StackPanel>
+                    </materialDesign:HintAssist.Hint>
+                </TextBox>
+                <Button Grid.Row="0" Grid.Column="1" Content="Browse" Margin="5" Click="ButtonBrowseLvl_OnClick" />
+                <TextBox Grid.Row="1" Grid.Column="0" 
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         Name="BoxBrowseReplay" 
+                         Margin="5" >
+                    <materialDesign:HintAssist.Hint>
+                        <StackPanel
+                            Margin="2, 0"
+                            Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                                Kind="FileEye" />
+                            <TextBlock
+                                Text="Select .gdr.json replay file" />
+                        </StackPanel>
+                    </materialDesign:HintAssist.Hint>
+                </TextBox>
+                <Button Grid.Row="1" Grid.Column="1" Content="Browse" Margin="5" Click="ButtonBrowseReplay_OnClick" />
+            </Grid>
+            
+        </DockPanel>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
-        <TextBlock Grid.Row="0" Grid.Column="0" FontSize="16" TextWrapping="Wrap" Margin="0,0,0,10">
-            Geometry Dash Replay to Hold-Auto-Level Converter
-        </TextBlock>
-
-        <Grid Grid.Row="1" Grid.Column="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-
-            <TextBox Name="BoxBrowseLvl" Grid.Row="0" Grid.Column="0" Text="Select .gmd level file" Margin="5" />
-            <Button Grid.Row="0" Grid.Column="1" Content="Browse" Margin="5" Click="ButtonBrowseLvl_OnClick" />
-
-            <TextBox Name="BoxBrowseReplay" Grid.Row="1" Grid.Column="0" Text="Select .gdr.json replay file" Margin="5" />
-            <Button Grid.Row="1" Grid.Column="1" Content="Browse" Margin="5" Click="ButtonBrowseReplay_OnClick" />
-        </Grid>
-
-        <Grid Grid.Row="2" Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <Label Grid.Row="0" Grid.Column="0" Content="Generate Clicks" Margin="5" />
-            <CheckBox Grid.Row="0" Grid.Column="1" Name="CheckGenerateClicks" Margin="5" VerticalAlignment="Center" />
-        </Grid>
-
-        <Button Grid.Row="3" Content="Generate" Margin="5" Click="ButtonGenerate_OnClick" Width="100" HorizontalAlignment="Left" />
         
-        
-    </Grid>
-</Window>
+</mde:MaterialWindow>

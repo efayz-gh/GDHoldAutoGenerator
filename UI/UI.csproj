@@ -12,4 +12,9 @@
       <ProjectReference Include="..\GDHoldAutoGenerator\GDHoldAutoGenerator.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MaterialDesignExtensions" Version="4.0.0-a02" />
+      <PackageReference Include="MaterialDesignThemes" Version="5.2.2-ci998" />
+    </ItemGroup>
+
 </Project>

@@ -1,14 +1,16 @@
 ﻿using System.IO;
 using System.Windows;
 using GDHoldAutoGenerator;
-using Microsoft.Win32;
+using MaterialDesignExtensions.Controls;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace UI;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow
+public partial class MainWindow : MaterialWindow
 {
     private string? _levelFile;
     private string? _replayFile;
